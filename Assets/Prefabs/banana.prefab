@@ -242,10 +242,10 @@ MonoBehaviour:
   bananaRotation: {x: 0, y: 0, z: -5}
   boomerangDistance: 8
   boomerangWidth: 1
-  boomerangSeconds: 4
+  boomerangSeconds: 6.3
   percentageOfCircle: 0.9
   bananaEase: 0.002
-  drawPath: 1
+  drawPath: 0
   check: 1.5
   rb: {fileID: 54073173763135982}
   cube: {fileID: 1942521052808584, guid: 1eceba183723745ce8c8bd05baba8655, type: 2}

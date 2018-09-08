@@ -34,6 +34,8 @@ public class Arrow : MonoBehaviour {
 
     public bool align;
 
+    public List <GameObject> miniGrapes;
+
 	// Use this for initialization
 	void Start () 
     {
@@ -45,6 +47,7 @@ public class Arrow : MonoBehaviour {
     {
         if (shoot)
         {
+            myCol.enabled = true;
             startVel = true;
             shoot = false;
             rb.AddRelativeForce(0,0,Game._arrowForce); 
@@ -107,8 +110,19 @@ public class Arrow : MonoBehaviour {
 
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "fruit" || collider.gameObject.tag == "dummy" || collider.gameObject.tag == "banana")
+        if (collider.gameObject.tag == "fruit" || collider.gameObject.tag == "dummy" || collider.gameObject.tag == "banana" || collider.gameObject.tag == "miniGrapes")
         {
+            if (collider.gameObject.tag == "miniGrapes")
+            {
+                foreach (GameObject mini in miniGrapes)
+                {
+                    if (mini == collider.gameObject)
+                    {
+                        return;
+                    }
+                }
+            }
+
             for (int i = 0; i < 3; i++)
             {
                 if (col[i].GetComponent<ArrowCollider>().myFruit == null)
@@ -139,7 +153,12 @@ public class Arrow : MonoBehaviour {
                         }
                     }
 
-                    if (collider.gameObject.tag == "fruit" || collider.gameObject.tag == "banana")
+                    if (collider.gameObject.tag == "fruit" || collider.gameObject.tag == "miniGrapes")
+                    {
+                        StabFruit(collider, col[i]);
+                        return;
+                    }
+                    else if (collider.gameObject.tag == "banana")
                     {
                         StabFruit(collider, col[i]);
                         return;
@@ -149,11 +168,7 @@ public class Arrow : MonoBehaviour {
                         StabDummy(collider);
                         return;
                     }
-                    else if (collider.gameObject.tag == "grapes")
-                    {
-                        collider.gameObject.GetComponent<Grapes>().split = true;
-                        Debug.Log("beeeee");
-                    }
+                
                 }
             }
 
@@ -166,6 +181,13 @@ public class Arrow : MonoBehaviour {
         else if (collider.gameObject.tag == "arrowBomb")
         {
             collider.GetComponent<ArrowBomb>().explode = true;
+        }
+
+        else if (collider.gameObject.tag == "grapes")
+        {
+            collider.gameObject.GetComponent<Grapes>().split = true;
+            collider.gameObject.GetComponent<Grapes>().arCol = mySecCol;
+            collider.gameObject.GetComponent<Grapes>().arrow = gameObject;
         }
 
 
@@ -199,6 +221,8 @@ public class Arrow : MonoBehaviour {
         Destroy(collider);
 
     }
+
+
 
     void StabDummy(Collider collider)
     {     

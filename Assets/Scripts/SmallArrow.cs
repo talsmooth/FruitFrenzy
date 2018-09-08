@@ -36,6 +36,8 @@ public class SmallArrow : MonoBehaviour {
 
     public bool align;
 
+    public List <GameObject> miniGrapes;
+
     // Use this for initialization
     void Start () 
     {
@@ -90,43 +92,55 @@ public class SmallArrow : MonoBehaviour {
             AlignArrow();
         }
 
-        if (startVel && rb != null)
-        {   
-            if (rb.velocity != Vector3.zero)
-            {
-                rb.rotation = Quaternion.LookRotation(rb.velocity);  
-            }
+        if (rb.velocity != Vector3.zero)
+        {
+            rb.rotation = Quaternion.LookRotation(rb.velocity);  
         }
     }
 
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "fruit" || collider.gameObject.tag == "dummy" || collider.gameObject.tag == "banana")
+        if (collider.gameObject.tag == "fruit" || collider.gameObject.tag == "dummy" || collider.gameObject.tag == "banana" || collider.gameObject.tag == "miniGrapes")
         {
-                if (col.GetComponent<ArrowCollider>().myFruit == null)
+            if (collider.gameObject.tag == "miniGrapes")
+            {
+                foreach (GameObject mini in miniGrapes)
                 {
-                    RaycastHit hit;
-                    if (Physics.Raycast(transform.position, transform.forward, out hit))
+                    if (mini == collider.gameObject)
                     {
-                        if (collider.gameObject.GetComponent<Fruit>().particle != null)
-                        {
-                            splash1 = Instantiate(collider.gameObject.GetComponent<Fruit>().particle, hit.point, Quaternion.LookRotation(-rb.velocity));
-                            spl1 = true;
-                        }
-                    }
-
-                    if (collider.gameObject.tag == "fruit" || collider.gameObject.tag == "banana")
-                    {
-                        StabFruit(collider, col);
-                        return;
-                    }
-
-                    else
-                    {
-                        StabDummy(collider);
                         return;
                     }
                 }
+            }
+
+            if (col.GetComponent<ArrowCollider>().myFruit == null)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, transform.forward, out hit))
+                {
+                    if (collider.gameObject.GetComponent<Fruit>().particle != null)
+                    {
+                        splash1 = Instantiate(collider.gameObject.GetComponent<Fruit>().particle, hit.point, Quaternion.LookRotation(-rb.velocity));
+                        spl1 = true;
+                    }
+                }
+
+                if (collider.gameObject.tag == "fruit" || collider.gameObject.tag == "miniGrapes")
+                {
+                    StabFruit(collider, col);
+                    return;
+                }
+                else if (collider.gameObject.tag == "banana")
+                {
+                    StabFruit(collider, col);
+                    return;
+                }
+                else if (collider.gameObject.tag == "dummy")
+                {
+                    StabDummy(collider);
+                    return;
+                }
+            }
 
         }
 
@@ -140,6 +154,12 @@ public class SmallArrow : MonoBehaviour {
             collider.GetComponent<ArrowBomb>().explode = true;
         }
 
+        else if (collider.gameObject.tag == "grapes")
+        {
+            collider.gameObject.GetComponent<Grapes>().split = true;
+            collider.gameObject.GetComponent<Grapes>().arCol = mySecCol;
+            collider.gameObject.GetComponent<Grapes>().arrow = gameObject;
+        }
 
     }
 
@@ -148,10 +168,15 @@ public class SmallArrow : MonoBehaviour {
         AudioManager._sound.clip = AudioManager._hitFruit;
         AudioManager._sound.Play();
 
-
         if (collider.gameObject.tag == "banana")
         {
+            collider.gameObject.GetComponent<Banana>().bananaAudio.Stop();
             Destroy(collider.gameObject.GetComponent<Banana>());
+
+            for (int i = 0; i < collider.gameObject.GetComponent<Banana>().cols.Length; i++)
+            {
+                collider.gameObject.GetComponent<Banana>().cols[i].enabled = false;
+            }
         }
 
         col.GetComponent<ArrowCollider>().myFruit = collider.gameObject;
@@ -166,6 +191,7 @@ public class SmallArrow : MonoBehaviour {
         Destroy(collider);
 
     }
+
 
     void StabDummy(Collider collider)
     {     

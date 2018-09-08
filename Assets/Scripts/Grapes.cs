@@ -26,6 +26,10 @@ public class Grapes : MonoBehaviour {
 
     public Rigidbody rb;
 
+    public Collider arCol;
+
+    public GameObject arrow;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -38,11 +42,15 @@ public class Grapes : MonoBehaviour {
         {
             pre1 = Instantiate(miniGra1, transform.position, Quaternion.identity);    
 
+            Physics.IgnoreCollision(arCol, pre1.gameObject.GetComponent<Collider>()); 
+
             pre1.gameObject.GetComponent<Rigidbody>().velocity = rb.velocity; 
 
             pre1.gameObject.GetComponent<Rigidbody>().AddForce(miniGrape1); 
 
-            pre2 = Instantiate(miniGra2, transform.position, Quaternion.identity);    
+            pre2 = Instantiate(miniGra2, transform.position, Quaternion.identity); 
+
+            Physics.IgnoreCollision(arCol, pre2.gameObject.GetComponent<Collider>()); 
 
             pre2.gameObject.GetComponent<Rigidbody>().velocity = rb.velocity; 
 
@@ -50,9 +58,17 @@ public class Grapes : MonoBehaviour {
 
             pre3 = Instantiate(miniGra3, transform.position, Quaternion.identity);    
 
+            Physics.IgnoreCollision(arCol, pre3.gameObject.GetComponent<Collider>()); 
+
             pre3.gameObject.GetComponent<Rigidbody>().velocity = rb.velocity; 
 
             pre3.gameObject.GetComponent<Rigidbody>().AddForce(miniGrape3); 
+
+            arrow.gameObject.GetComponent<Arrow>().miniGrapes.Add(pre1);
+
+            arrow.gameObject.GetComponent<Arrow>().miniGrapes.Add(pre2);
+
+            arrow.gameObject.GetComponent<Arrow>().miniGrapes.Add(pre3);
 
             Destroy(gameObject);    
 

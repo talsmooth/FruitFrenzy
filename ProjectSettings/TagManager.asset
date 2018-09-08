@@ -12,6 +12,7 @@ TagManager:
   - arrowBomb
   - banana
   - grapes
+  - miniGrapes
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - 
   - arrow
   - smallArrow
-  - 
+  - miniGrapes
   - 
   - 
   - 
