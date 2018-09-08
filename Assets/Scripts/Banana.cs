@@ -10,7 +10,7 @@ public class Banana : MonoBehaviour {
 
     public float boomerangWidth;
 
-    [Range(1.0f, 10.0f)]
+    [Range(1.0f, 20.0f)]
     public float boomerangSeconds;
 
     [Range(0.01f, 0.94f)]
